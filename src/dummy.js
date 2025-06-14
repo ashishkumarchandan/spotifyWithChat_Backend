@@ -1,22 +1,38 @@
-import { clerkClient } from "@clerk/express";
+import { Album } from "../models/album.model.js";
+import { Song } from "../models/song.model.js";
+import { User } from "../models/user.model.js";
 
-export const protectRoute = async (req, res, next) => {
-	if (!req.auth.userId) {
-		return res.status(401).json({ message: "Unauthorized - you must be logged in" });
-	}
-	next();
-};
-
-export const requireAdmin = async (req, res, next) => {
+export const getStats = async (req, res, next) => {
 	try {
-		const currentUser = await clerkClient.users.getUser(req.auth.userId);
-		const isAdmin = process.env.ADMIN_EMAIL === currentUser.primaryEmailAddress?.emailAddress;
+		const [totalSongs, totalAlbums, totalUsers, uniqueArtists] = await Promise.all([
+			Song.countDocuments(),
+			Album.countDocuments(),
+			User.countDocuments(),
 
-		if (!isAdmin) {
-			return res.status(403).json({ message: "Unauthorized - you must be an admin" });
-		}
+			Song.aggregate([
+				{
+					$unionWith: {
+						coll: "albums",
+						pipeline: [],
+					},
+				},
+				{
+					$group: {
+						_id: "$artist",
+					},
+				},
+				{
+					$count: "count",
+				},
+			]),
+		]);
 
-		next();
+		res.status(200).json({
+			totalAlbums,
+			totalSongs,
+			totalUsers,
+			totalArtists: uniqueArtists[0]?.count || 0,
+		});
 	} catch (error) {
 		next(error);
 	}
