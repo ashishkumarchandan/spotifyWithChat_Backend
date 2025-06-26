@@ -2,6 +2,7 @@
 // 🗄️🔌 DATABASE CONNECTION - MONGODB SETUP 🔌🗄️
 // =============================================
 import mongoose from "mongoose";
+import 'colors';
 
 export const connectDB = async () => {
   try {
