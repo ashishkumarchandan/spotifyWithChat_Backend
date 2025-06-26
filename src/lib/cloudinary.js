@@ -1,12 +1,18 @@
-import { v2 as cloudinary } from "cloudinary";
-import dotenv from "dotenv";
+// =============================================
+// ☁️📸 CLOUDINARY CONFIG - MEDIA UPLOAD SERVICE 📸☁️
+// =============================================
+import { v2 as cloudinary } from "cloudinary"; // 🌩️ Cloud service SDK
+import dotenv from "dotenv"; // 🔐 Environment loader
 
-dotenv.config();
+// ⚙️ LOAD ENVIRONMENT VARIABLES
+dotenv.config(); // 📁 Loads .env file secrets
 
+// 🔧 CONFIGURE CLOUDINARY CONNECTION
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, // ☁️ Your cloud ID
+  api_key: process.env.CLOUDINARY_API_KEY, // 🔑 Public key
+  api_secret: process.env.CLOUDINARY_API_SECRET, // 🗝️ Private key (keep safe!)
 });
 
-export default cloudinary;
+// 🚀 EXPORT READY-TO-USE CLOUDINARY INSTANCE
+export default cloudinary; // ⚡ Use for uploads/fetching media

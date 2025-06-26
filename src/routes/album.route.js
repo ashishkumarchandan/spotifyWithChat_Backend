@@ -1,9 +1,19 @@
+// =============================================
+// 💿📀 ALBUM ROUTES - MUSIC COLLECTION ENDPOINTS 📀💿
+// =============================================
 import { Router } from "express";
-import { getAlbumById, getAllAlbums } from "../controller/album.controller";
+import { getAlbumById, getAllAlbums } from "../controller/album.controller.js";
 
-const router = Router();
+const router = Router(); // 🧩 Create Express router
 
-router.get("/", getAllAlbums);
-router.get("/:albumId", getAlbumById);
+// ===================
+// 🌐 GET ALL ALBUMS
+// ===================
+router.get("/", getAllAlbums); // 🔍 Fetch all albums
 
-export default router;
+// =======================
+// 🔍 GET ALBUM BY ID + SONGS
+// =======================
+router.get("/:albumId", getAlbumById); // 🎵 Fetch specific album + populate songs!
+
+export default router; // 🚀 Export ready-to-use album router
