@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { Message } from "../models/message.model";
+import { Message } from "../models/message.model.js";
 
 export const initializeSocket = (server) => {
   const io = new Server(server, {
@@ -17,8 +17,9 @@ export const initializeSocket = (server) => {
       userSockets.set(userId, socket.id);
       userActivities.set(userId, "Idle");
 
-      io.emit("users_online", Array.form(userSockets.keys()));
-      socket.emit("users_online", Array.form(userSockets.keys()));
+      // Fix: Array.from instead of Array.form
+      io.emit("users_online", Array.from(userSockets.keys()));
+      socket.emit("users_online", Array.from(userSockets.keys()));
       io.emit("activities", Array.from(userActivities.entries()));
     });
 
@@ -30,17 +31,18 @@ export const initializeSocket = (server) => {
 
     socket.on("send_message", async (data) => {
       try {
-        const { senderId, reciverId, content } = data;
+        const { senderId, receiverId, content } = data; // Fixed spelling
 
         const message = await Message.create({
           senderId,
-          reciverId,
+          receiverId, // Fixed spelling
           content,
         });
 
-        const reciverSocketId = userSockets.get(reciverId);
-        if (reciverSocketId) {
-          io.to(reciverSocketId).emit("receive_message", message);
+        // Fixed spelling and variable names
+        const receiverSocketId = userSockets.get(receiverId);
+        if (receiverSocketId) {
+          io.to(receiverSocketId).emit("receive_message", message);
         }
         socket.emit("message_sent", message);
       } catch (error) {
